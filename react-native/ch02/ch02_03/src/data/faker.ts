@@ -1,4 +1,6 @@
-import faker from 'faker';
+// import faker from 'faker';
+const faker = require('faker');
+// import { faker } from '@faker-js/faker';
 import * as U from './util'
 
 export const randomId = (): string => faker.datatype.uuid()
