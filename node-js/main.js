@@ -105,7 +105,7 @@ var app = http.createServer(function(request,response){
         fs.writeFile(`data/${title}`, description, 'utf8', function(err){
           response.writeHead(302, {Location: `/?id=${title}`});
           response.end();
-        })
+        });
       });
     } else if(pathname === '/update'){
       fs.readdir('./data', function(error, filelist) {  // readdir : 해당 디렉토리에 있는 파일 목록을 배열로 반환
@@ -131,6 +131,26 @@ var app = http.createServer(function(request,response){
               response.writeHead(200);
               response.end(template);
           });
+      });
+    } else if(pathname === '/update_process'){
+        var body = '';
+
+        request.on('data', function (data) {
+            body = body + data;
+        });
+
+        request.on('end', function () {
+            var post = qs.parse(body);
+            var id = post.id;
+            var title = post.title;
+            var description = post.description;
+            // console.log(post);
+            fs.rename(`data/${id}`, `data/${title}`, function(error){
+                fs.writeFile(`data/${title}`, description, 'utf8', function(err){
+                    response.writeHead(302, {Location: `/?id=${title}`});
+                    response.end();
+                });
+            });
       });
     } else {
       response.writeHead(404);
