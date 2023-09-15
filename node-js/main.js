@@ -94,7 +94,7 @@ var app = http.createServer(function(request,response){
             response.writeHead(200);   
             response.end(template);
         });
-    } else if(pathname === '/create_process'){
+    } else if(pathName === '/create_process'){
       var body = '';
 
       request.on('data', function (data) {
@@ -112,7 +112,7 @@ var app = http.createServer(function(request,response){
           response.end();
         });
       });
-    } else if(pathname === '/update'){
+    } else if(pathName === '/update'){
       fs.readdir('./data', function(error, filelist) {  // readdir : 해당 디렉토리에 있는 파일 목록을 배열로 반환
           var list = templateList(filelist);
           // 읽은 파일은 decription에 저장됨
@@ -137,7 +137,7 @@ var app = http.createServer(function(request,response){
               response.end(template);
           });
       });
-    } else if(pathname === '/update_process'){
+    } else if(pathName === '/update_process'){
         var body = '';
 
         request.on('data', function (data) {
@@ -157,6 +157,21 @@ var app = http.createServer(function(request,response){
                 });
             });
       });
+    } else if (pathName === '/delete_process') {
+        var body = '';
+
+        request.on('data', function (data) {
+            body = body + data;
+        });
+
+        request.on('end', function () {
+            var post = qs.parse(body);
+            var id = post.id;
+            fs.unlink(`data/${id}`, function(error){
+                response.writeHead(302, {Location: `/`});
+                response.end();
+            });
+        });
     } else {
       response.writeHead(404);
       response.end('Not Found...');
