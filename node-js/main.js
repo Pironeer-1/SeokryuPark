@@ -3,6 +3,7 @@ var fs = require('fs');
 var url = require('url');
 var qs = require('querystring');
 var template = require('./lib/template.js');
+var path = require('path');
 
 var app = http.createServer(function(request,response){
     var _url = request.url;
@@ -30,8 +31,9 @@ var app = http.createServer(function(request,response){
       } else {
           fs.readdir('./data', (err, filelist) => {
             let list = template.list(filelist);
+            var filteredId = path.parse(queryData.id).base;
 
-            fs.readFile(`data/${queryData.id}`, 'utf-8', (err, description) => {
+            fs.readFile(`data/${filteredId}`, 'utf-8', (err, description) => {
               var title = queryData.id;
               var template = template.HTML(title, list,
                 `<h2>${title}</h2><p>${description}</p>`,
@@ -84,10 +86,11 @@ var app = http.createServer(function(request,response){
         });
       });
     } else if(pathName === '/update'){
-      fs.readdir('./data', function(error, filelist) {  // readdir : 해당 디렉토리에 있는 파일 목록을 배열로 반환
+      fs.readdir('./data', function(error, filelist) {
           var list = template.list(filelist);
-          // 읽은 파일은 decription에 저장됨
-          fs.readFile(`data/${queryData.id}`, 'utf8', function(err,description){
+          var filteredId = path.parse(queryData.id).base;
+  
+          fs.readFile(`data/${filteredId}`, 'utf8', function(err,description){
               var title = queryData.id;
               var template = template.HTML(title, list,
                   `
@@ -138,7 +141,8 @@ var app = http.createServer(function(request,response){
         request.on('end', function () {
             var post = qs.parse(body);
             var id = post.id;
-            fs.unlink(`data/${id}`, function(error){
+            var filteredId = path.parse(id).base;
+            fs.unlink(`data/${filteredId}`, function(error){
                 response.writeHead(302, {Location: `/`});
                 response.end();
             });
