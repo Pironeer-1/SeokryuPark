@@ -13,6 +13,7 @@ function templateHTML(title, list, body) {
   <body>
     <h1><a href="/">WEB</a></h1>
     ${list}
+    <a href="/create">create</a>
     ${body}
   </body>
   </html>
@@ -42,8 +43,8 @@ var app = http.createServer(function(request,response){
         fs.readdir('./data', (err, filelist) => {
           console.log(filelist);
 
-          var title = 'Welcome';
-          var description = 'Meet the New NodeJS!'
+          var title = 'New dsfrsdfTITLE';
+          var description = 'HElloooooooo'
           let list = templateList(filelist);
 
           var template = templateHTML(title, list, `<h2>${title}</h2><p>${description}</p>`);
@@ -63,9 +64,27 @@ var app = http.createServer(function(request,response){
             });
           });
         }
+    } else if (pathName === '/create'){
+        fs.readdir('./data', function(error, filelist) {
+            var title = 'WEB - create';
+            var list = templateList(filelist);
+            var template = templateHTML(title, list, `
+                <form action="http://localhost:3000/create_process" method="post">
+                    <p><input type="text" name="title" placeholder="title"></p>
+                    <p>
+                        <textarea name="description" placeholder="description"></textarea>
+                    </p>
+                    <p>
+                        <input type="submit">
+                    </p>
+                </form>
+            `);
+            response.writeHead(200);   
+            response.end(template);
+        });
     } else {
       response.writeHead(404);
-      response.end('Not Found..');
+      response.end('Not Found...');
     }
 });
 app.listen(80);

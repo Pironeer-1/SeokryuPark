@@ -7,8 +7,15 @@ const fs = require('fs');
 // console.log(result);
 // console.log('C');
 
-console.log('A');
-fs.readFile('syntax/sample.txt', 'utf-8', (err, result) => {
-  console.log(result);
-});
-console.log('C');
+// console.log('A');
+// fs.readFile('syntax/sample.txt', 'utf-8', (err, result) => {
+//   console.log(result);
+// });
+// console.log('C');
+
+console.log('a');
+setTimeout(() => {
+  console.log('hey');
+}, 4)
+
+console.log('b');
